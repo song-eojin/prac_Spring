@@ -1,0 +1,39 @@
+//gradle 기반의 build 스크립트
+//소스코드를 빌드하거나 라이브러리들의 의존성을 관리하기 쉽게 해준다
+//즉, 개발을 하면서 필요한 외부 라이브러리둘울 dependencies 블럭에 작성하면, Gradle 이 해당 라이브러리들을 Maven Repository 라는 외부 저장소에서 자동으로 다운로드 해온다
+//또한 앞서 말했듯이 라이브러리들 간의 의존성을 자동관리하므로 라이브러리 충돌의 염려가 없다
+//여기서 Maven Repository 란 라이브러리들을 모아둔 저장소이다
+//Groovy 또는 Kotlin 언어로 작성할 수 있다
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.sparta'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+//원격 저장소 설정
+repositories {
+	mavenCentral()
+}
+
+//프로젝트 개발에 필요한 의존성 선언
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' //단위 테스트 framework 인 Junit 사용
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
